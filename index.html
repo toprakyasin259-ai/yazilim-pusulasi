@@ -1,322 +1,599 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yazılım Pusulası - Keşfet & Karşılaştır</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class'
-    }
-  </script>
-</head>
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300">
+    <!-- Google tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2GM2KR5P9G"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  <!-- Üst Menü / Header -->
-  <header class="p-5 border-b bg-white dark:bg-gray-800 dark:border-gray-700 flex justify-between items-center shadow-sm sticky top-0 z-50">
-    <div class="flex items-center gap-2">
-      <span class="text-2xl">🧭</span>
-      <h1 class="text-2xl font-bold tracking-tight">Yazılım Pusulası</h1>
-    </div>
-    <button id="themeToggle" class="px-4 py-2 border rounded-lg bg-gray-100 dark:bg-gray-700 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition text-sm font-semibold">
-      🌙 Koyu Tema
-    </button>
-  </header>
+      gtag('config', 'G-2GM2KR5P9G');
+    </script>
 
-  <div class="max-w-7xl mx-auto p-6">
-    <!-- Arama Çubuğu -->
-    <div class="text-center my-6">
-      <h2 class="text-3xl font-extrabold mb-2">İşletmeniz İçin En Doğru Yazılımı Keşfedin</h2>
-      <p class="text-gray-600 dark:text-gray-400 text-sm mb-6">İhtiyacınıza uygun yazılımları filtreleyin ve inceleyin.</p>
-      
-      <div class="max-w-xl mx-auto">
-        <input 
-          type="text" 
-          id="searchInput" 
-          placeholder="Yazılım adı veya kelime arayın... (Örn: Paraşüt, Fatura)" 
-          class="w-full p-4 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-        >
-      </div>
-    </div>
-
-    <!-- Ana İçerik: Sol Filtre Paneli + Sağ Yazılım Kartları -->
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mt-8">
-      
-      <!-- Sol Yan Panel: Filtreler -->
-      <aside class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm h-fit">
-        <div class="flex justify-between items-center mb-4 pb-2 border-b dark:border-gray-700">
-          <h3 class="font-bold text-lg">Filtrele</h3>
-          <button id="resetFilters" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">Sıfırla</button>
-        </div>
-
-        <!-- Özellik Filtreleri (Checkbox) -->
-        <div class="mb-6">
-          <h4 class="font-semibold text-sm mb-3 text-gray-700 dark:text-gray-300">Öne Çıkan Özellikler</h4>
-          <div class="space-y-2 text-sm">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" class="feature-filter rounded text-blue-600" value="mobil">
-              <span>📱 Mobil Uygulama Var</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" class="feature-filter rounded text-blue-600" value="efatura">
-              <span>🧾 e-Fatura Entegrasyonu</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" class="feature-filter rounded text-blue-600" value="ucretsiz">
-              <span>🎁 Ücretsiz Deneme / Plan</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" class="feature-filter rounded text-blue-600" value="bulut">
-              <span>☁️ Bulut Tabanlı</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Kategori Filtresi -->
-        <div>
-          <h4 class="font-semibold text-sm mb-3 text-gray-700 dark:text-gray-300">Kategoriler</h4>
-          <select id="categoryFilter" class="w-full p-2.5 border rounded-lg dark:bg-gray-700 dark:border-gray-600 text-sm">
-            <option value="all">Tüm Kategoriler</option>
-            <option value="Ön Muhasebe & Finans">Ön Muhasebe & Finans</option>
-            <option value="E-Ticaret Altyapısı">E-Ticaret Altyapısı</option>
-            <option value="İnsan Kaynakları">İnsan Kaynakları</option>
-            <option value="CRM & Müşteri Takibi">CRM & Müşteri Takibi</option>
-            <option value="Proje & Görev Yönetimi">Proje & Görev Yönetimi</option>
-            <option value="Tasarım & İçerik">Tasarım & İçerik</option>
-            <option value="Filo & Araç Yönetimi">Filo & Araç Yönetimi</option>
-          </select>
-        </div>
-      </aside>
-
-      <!-- Sağ Taraf: Yazılım Kartları Listesi -->
-      <main class="lg:col-span-3">
-        <div id="softwareList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Kartlar JavaScript ile yüklenecek -->
-        </div>
-      </main>
-
-    </div>
-  </div>
-
-  <script>
-    // 10 Adet Detaylı Yazılım Verisi
-    const softwareData = [
-      {
-        id: "parasut",
-        name: "Paraşüt",
-        category: "Ön Muhasebe & Finans",
-        tagline: "Küçük işletmeler için kolay e-Fatura, gelir-gider ve stok takibi.",
-        pros: ["Kullanımı çok kolay", "Mobil uygulaması harika", "e-Fatura entegrasyonu hızlı"],
-        cons: ["Büyük üretim tesisleri için karmaşık raporları eksik"],
-        rating: 4.8,
-        website: "https://www.parasut.com",
-        features: ["mobil", "efatura", "bulut", "ucretsiz"]
-      },
-      {
-        id: "ikas",
-        name: "İkas",
-        category: "E-Ticaret Altyapısı",
-        tagline: "Hızlı ve modern altyapıyla kendi e-ticaret sitenizi dakikalar içinde kurun.",
-        pros: ["Sayfa açılış hızları yüksek", "Kolay yönetim paneli", "Pazaryeri entegrasyonu"],
-        cons: ["Başlangıç paket fiyatları biraz yüksek gelebilir"],
-        rating: 4.7,
-        website: "https://ikas.com",
-        features: ["bulut", "ucretsiz"]
-      },
-      {
-        id: "kolay-ik",
-        name: "Kolay İK",
-        category: "İnsan Kaynakları",
-        tagline: "Çalışan izinleri, masrafları ve bordro süreçlerini tek ekrandan yönetin.",
-        pros: ["Şık ve sade arayüz", "İzin takibini çok pratikleştiriyor"],
-        cons: ["Muhasebe yazılımı olmadığı için fatura kesemezsiniz"],
-        rating: 4.6,
-        website: "https://kolayik.com",
-        features: ["mobil", "bulut", "ucretsiz"]
-      },
-      {
-        id: "teamgram",
-        name: "TeamGram",
-        category: "CRM & Müşteri Takibi",
-        tagline: "Satış ekibinizin müşteri görüşmelerini ve teklif süreçlerini yönetin.",
-        pros: ["Türkçe destek ekibi harika", "Teklif hazırlama özelliği pratik"],
-        cons: ["Uluslararası büyük ekipler için özelleştirme imkanı sınırlı"],
-        rating: 4.5,
-        website: "https://www.teamgram.com",
-        features: ["mobil", "bulut", "ucretsiz"]
-      },
-      {
-        id: "logo-isbasi",
-        name: "Logo İşbaşı",
-        category: "Ön Muhasebe & Finans",
-        tagline: "Cep telefonunuzdan saniyeler içinde e-Fatura ve e-SMM kesin.",
-        pros: ["Logo güvencesi", "Mobil uygulaması çok hızlı"],
-        cons: ["Gelişmiş stok analizi özellikleri sınırlı"],
-        rating: 4.4,
-        website: "https://isbasi.com",
-        features: ["mobil", "efatura", "bulut"]
-      },
-      {
-        id: "trello",
-        name: "Trello",
-        category: "Proje & Görev Yönetimi",
-        tagline: "Kanban tahtaları ile projelerinizi ve günlük işlerinizi görselleştirin.",
-        pros: ["Ücretsiz planı çok yeterli", "Sürükle-bırak kullanımı çok kolay"],
-        cons: ["Çok büyük ve detaylı projelerde karmaşıklaşabiliyor"],
-        rating: 4.7,
-        website: "https://trello.com",
-        features: ["mobil", "bulut", "ucretsiz"]
-      },
-      {
-        id: "canva",
-        name: "Tasarım & İçerik",
-        category: "Tasarım & İçerik",
-        tagline: "Sosyal medya görselleri, sunumlar ve afişler oluşturmak için grafik tasarım aracı.",
-        pros: ["Binlerce hazır şablon", "Tasarım bilgisi gerektirmez"],
-        cons: ["Profesyonel vektörel çizimler için yetersiz"],
-        rating: 4.9,
-        website: "https://www.canva.com",
-        features: ["mobil", "bulut", "ucretsiz"]
-      },
-      {
-        id: "zoho-crm",
-        name: "Zoho CRM",
-        category: "CRM & Müşteri Takibi",
-        tagline: "Küresel ölçekte müşteri ilişkilerinizi ve satış kanallarınızı otomatikleştirin.",
-        pros: ["Çok detaylı özelleştirme imkanı", "Yapay zeka desteği"],
-        cons: ["Arayüzü ilk başlayanlar için karmaşık gelebilir"],
-        rating: 4.5,
-        website: "https://www.zoho.com/crm",
-        features: ["mobil", "bulut", "ucretsiz"]
-      },
-      {
-        id: "bulut-filo",
-        name: "Bulut Filo",
-        category: "Filo & Araç Yönetimi",
-        tagline: "Şirket araçlarınızın bakım, ceza, kasko ve yakıt masraflarını kontrol edin.",
-        pros: ["Araç başı maliyeti düşürür", "Bakım zamanı otomatik bildirim"],
-        cons: ["Sadece filosu olan şirketlere özeldir"],
-        rating: 4.3,
-        website: "https://bulutfilo.com",
-        features: ["bulut"]
-      },
-      {
-        id: "iyzico",
-        name: "iyzico",
-        category: "E-Ticaret Altyapısı",
-        tagline: "E-ticaret sitenizde güvenli sanal pos ve ödeme alma altyapısı.",
-        pros: ["Kolay entegrasyon", "Ertesi gün ödeme alma seçeneği"],
-        cons: ["İşlem başı komisyon oranları değişebilir"],
-        rating: 4.8,
-        website: "https://www.iyzico.com",
-        features: ["efatura", "bulut"]
-      }
-    ];
-
-    // Kartları Ekrana Çizme
-    function renderCards(items) {
-      const container = document.getElementById('softwareList');
-      container.innerHTML = '';
-
-      if (items.length === 0) {
-        container.innerHTML = `<div class="col-span-2 text-center text-gray-500 py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">Aradığınız filtre kriterlerine uygun yazılım bulunamadı.</div>`;
-        return;
-      }
-
-      items.forEach(item => {
-        const card = document.createElement('div');
-        card.className = "bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition flex flex-col justify-between";
-        
-        // Rozet/Etiket Yapısı
-        const featureBadges = item.features.map(f => {
-          if (f === 'mobil') return '<span class="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 text-[10px] px-2 py-0.5 rounded">Mobil</span>';
-          if (f === 'efatura') return '<span class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-[10px] px-2 py-0.5 rounded">e-Fatura</span>';
-          if (f === 'ucretsiz') return '<span class="bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200 text-[10px] px-2 py-0.5 rounded">Ücretsiz Plan</span>';
-          if (f === 'bulut') return '<span class="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-[10px] px-2 py-0.5 rounded">Bulut</span>';
-          return '';
-        }).join(' ');
-
-        card.innerHTML = `
-          <div>
-            <div class="flex justify-between items-start mb-2">
-              <h3 class="text-xl font-bold">${item.name}</h3>
-              <span class="bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 text-xs px-2.5 py-1 rounded-full font-medium">${item.category}</span>
-            </div>
-            
-            <div class="flex gap-1 mb-3 flex-wrap">
-              ${featureBadges}
-            </div>
-
-            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">${item.tagline}</p>
-            
-            <div class="space-y-1.5 mb-4 text-xs">
-              <div><strong class="text-green-600 dark:text-green-400">Artıları:</strong> ${item.pros.join(', ')}</div>
-              <div><strong class="text-red-600 dark:text-red-400">Eksileri:</strong> ${item.cons.join(', ')}</div>
-            </div>
-          </div>
-
-          <div class="flex justify-between items-center border-t dark:border-gray-700 pt-4 mt-2">
-            <span class="text-yellow-500 font-bold text-sm">⭐ ${item.rating} / 5</span>
-            <a href="${item.website}" target="_blank" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition">Siteye Git</a>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // Ana Filtreleme Fonksiyonu
-    function filterSoftware() {
-      const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
-      const selectedCategory = document.getElementById('categoryFilter').value;
-      
-      // Seçili Checkbox'ları Al
-      const selectedFeatures = Array.from(document.querySelectorAll('.feature-filter:checked')).map(cb => cb.value);
-
-      const filtered = softwareData.filter(item => {
-        // 1. Arama Filtresi
-        const matchesSearch = item.name.toLowerCase().includes(searchQuery) || 
-                              item.category.toLowerCase().includes(searchQuery) ||
-                              item.tagline.toLowerCase().includes(searchQuery);
-
-        // 2. Kategori Filtresi
-        const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-
-        // 3. Özellik (Checkbox) Filtresi - Seçilen TÜM özelliklere sahip olmalı
-        const matchesFeatures = selectedFeatures.every(feat => item.features.includes(feat));
-
-        return matchesSearch && matchesCategory && matchesFeatures;
-      });
-
-      renderCards(filtered);
-    }
-
-    // Dinleyiciler (Event Listeners)
-    document.getElementById('searchInput').addEventListener('input', filterSoftware);
-    document.getElementById('categoryFilter').addEventListener('change', filterSoftware);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yazılım Pusulası - İşletmeniz İçin En Doğru Yazılımı Keşfedin</title>
+    <meta name="description" content="Türkiye'deki işletmeler için en popüler SaaS ve B2B yazılımlarını karşılaştırın, fiyat aralıklarını ve detaylı özelliklerini inceleyin.">
     
-    document.querySelectorAll('.feature-filter').forEach(cb => {
-      cb.addEventListener('change', filterSoftware);
-    });
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen font-sans transition-colors duration-200">
 
-    // Filtreleri Sıfırla Butonu
-    document.getElementById('resetFilters').addEventListener('click', () => {
-      document.getElementById('searchInput').value = '';
-      document.getElementById('categoryFilter').value = 'all';
-      document.querySelectorAll('.feature-filter').forEach(cb => cb.checked = false);
-      filterSoftware();
-    });
+    <!-- Navbar -->
+    <header class="sticky top-0 z-30 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    YP
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight tracking-tight text-slate-900 dark:text-white">Yazılım Pusulası</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Türkiye Yazılım Rehberi</p>
+                </div>
+            </div>
 
-    // Koyu / Açık Tema Değişimi
-    const themeBtn = document.getElementById('themeToggle');
-    themeBtn.addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-      const isDark = document.documentElement.classList.contains('dark');
-      themeBtn.innerText = isDark ? '☀️ Açık Tema' : '🌙 Koyu Tema';
-    });
+            <!-- Tema Değiştirici -->
+            <button id="themeToggleBtn" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300 flex items-center gap-2 text-sm font-medium">
+                <i id="themeIcon" class="fa-solid fa-moon"></i>
+                <span id="themeText" class="hidden sm:inline">Koyu Tema</span>
+            </button>
+        </div>
+    </header>
 
-    // Sayfa açıldığında kartları göster
-    renderCards(softwareData);
-  </script>
+    <!-- Hero Bölümü -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6 text-center">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            İşletmeniz İçin En Doğru Yazılımı Keşfedin
+        </h2>
+        <p class="mt-3 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
+            İhtiyacınıza uygun yazılımları filtreleyin, fiyat aralıklarını görün ve tarafsız incelemelerle doğru kararı verin.
+        </p>
+
+        <!-- Arama Çubuğu -->
+        <div class="mt-6 max-w-xl mx-auto relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="searchInput" placeholder="Yazılım adı veya kelime arayın... (Örn: Paraşüt, Fatura, CRM)" 
+                class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm transition">
+        </div>
+    </section>
+
+    <!-- Ana İçerik Alanı -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Sol Filtre Paneli -->
+        <aside class="lg:col-span-1 space-y-6 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 h-fit shadow-sm">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3">
+                <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-filter text-blue-500"></i> Filtrele & Sırala
+                </h3>
+                <button id="resetFiltersBtn" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">Sıfırla</button>
+            </div>
+
+            <!-- Sıralama -->
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Sıralama / Fiyat Filtresi</label>
+                <select id="sortSelect" class="w-full p-2.5 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium">
+                    <option value="default">Varsayılan</option>
+                    <option value="rating">En Yüksek Puan</option>
+                    <option value="price-asc">En Düşük Fiyat (Artan)</option>
+                    <option value="price-desc">En Yüksek Fiyat (Azalan)</option>
+                </select>
+            </div>
+
+            <!-- Öne Çıkan Özellikler -->
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Öne Çıkan Özellikler</label>
+                <div class="space-y-2 text-sm">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" value="Popüler" class="feature-checkbox rounded text-blue-600 focus:ring-blue-500">
+                        <span>En Çok Kullanılanlar</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" value="Mobil" class="feature-checkbox rounded text-blue-600 focus:ring-blue-500">
+                        <span>Mobil Uygulama Var</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" value="e-Fatura" class="feature-checkbox rounded text-blue-600 focus:ring-blue-500">
+                        <span>e-Fatura Entegrasyonu</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" value="Ücretsiz Plan" class="feature-checkbox rounded text-blue-600 focus:ring-blue-500">
+                        <span>Ücretsiz Deneme / Plan</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" value="Bulut" class="feature-checkbox rounded text-blue-600 focus:ring-blue-500">
+                        <span>Bulut Tabanlı</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Kategori Filtresi -->
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Kategori</label>
+                <select id="categorySelect" class="w-full p-2.5 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium">
+                    <option value="all">Tüm Kategoriler</option>
+                </select>
+            </div>
+        </aside>
+
+        <!-- Sağ Yazılım Kartları Listesi -->
+        <section class="lg:col-span-3">
+            <div id="softwareList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- JavaScript dinamik yükleyecek -->
+            </div>
+            
+            <div id="noResults" class="hidden text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+                <i class="fa-solid fa-folder-open text-4xl text-slate-300 dark:text-slate-600 mb-3"></i>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">Akışınıza uygun yazılım bulunamadı.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Detay Modalı (Capterra Tarzı Görünüm) -->
+    <div id="detailModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-slate-200 dark:border-slate-700">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-start justify-between">
+                <div class="flex gap-4 items-center">
+                    <div id="modalLogo" class="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-2xl font-bold text-blue-600"></div>
+                    <div>
+                        <h3 id="modalName" class="text-2xl font-bold text-slate-900 dark:text-white"></h3>
+                        <span id="modalCategory" class="text-xs font-semibold px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300"></span>
+                    </div>
+                </div>
+                <button id="closeModalBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-2 rounded-xl transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal İçerik -->
+            <div class="p-6 overflow-y-auto custom-scrollbar space-y-6 text-sm">
+                <p id="modalDescription" class="text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+
+                <!-- Fiyat Aralıkları Kutucukları -->
+                <div class="bg-slate-50 dark:bg-slate-700/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-700">
+                    <h4 class="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">Tahmini Fiyat Aralıkları (Aylık / ₺)</h4>
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-600">
+                            <span class="block text-xs text-slate-400">En Düşük</span>
+                            <span id="modalMinPrice" class="font-extrabold text-blue-600 dark:text-blue-400"></span>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-600">
+                            <span class="block text-xs text-slate-400">Ortalama</span>
+                            <span id="modalAvgPrice" class="font-extrabold text-slate-800 dark:text-slate-200"></span>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-600">
+                            <span class="block text-xs text-slate-400">En Yüksek</span>
+                            <span id="modalMaxPrice" class="font-extrabold text-slate-800 dark:text-slate-200"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Artı & Eksi Yönleri -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-2xl border border-emerald-100 dark:border-emerald-900/40">
+                        <h5 class="font-bold text-emerald-700 dark:text-emerald-400 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check"></i> Güçlü Yönleri
+                        </h5>
+                        <p id="modalPros" class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed"></p>
+                    </div>
+                    <div class="bg-rose-50/50 dark:bg-rose-950/20 p-4 rounded-2xl border border-rose-100 dark:border-rose-900/40">
+                        <h5 class="font-bold text-rose-700 dark:text-rose-400 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-xmark"></i> Zayıf Yönleri
+                        </h5>
+                        <p id="modalCons" class="text-slate-600 dark:text-slate-300 text-xs leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <!-- Modüller ve Özellikler -->
+                <div>
+                    <h4 class="font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Öne Çıkan Modüller</h4>
+                    <div id="modalModules" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 flex justify-end gap-3">
+                <button id="modalCloseSecondary" class="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition">Kapat</button>
+                <a id="modalBuyBtn" target="_blank" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition flex items-center gap-2">
+                    <span>Satın Al / İncele</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Veri ve Mantığı -->
+    <script>
+        // 10 Yazılım Veri Seti
+        const softwareData = [
+            {
+                id: "parasut",
+                name: "Paraşüt",
+                category: "Ön Muhasebe & Finans",
+                description: "Küçük ve orta ölçekli işletmeler için geliştirilmiş bulut tabanlı e-Fatura, stok takibi ve gelir-gider yönetim yazılımı.",
+                rating: 4.8,
+                tags: ["Popüler", "Mobil", "e-Fatura", "Bulut", "Ücretsiz Plan"],
+                priceMin: 149,
+                priceAvg: 199,
+                priceMax: 349,
+                pros: "Arayüzü son derece basit ve anlaşılır. Banka hesaplarıyla kolayca entegre oluyor.",
+                cons: "Karmaşık üretim yapan fabrikalar için reçete takibi yetersiz kalabilir.",
+                modules: ["e-Fatura Entegrasyonu", "Gelir-Gider Takibi", "Cari Hesap Yönetimi", "Banka Entegrasyonu"],
+                url: "https://www.parasut.com"
+            },
+            {
+                id: "ikas",
+                name: "İkas",
+                category: "E-Ticaret Altyapısı",
+                description: "Hızlı ve modern altyapısıyla kendi e-ticaret sitenizi dakikalar içinde kurmanızı sağlayan bulut e-ticaret platformu.",
+                rating: 4.7,
+                tags: ["Popüler", "Bulut", "Ücretsiz Plan"],
+                priceMin: 300,
+                priceAvg: 450,
+                priceMax: 850,
+                pros: "Sayfa yüklenme hızı rakiplerine göre çok yüksek. Pazaryeri stok eşitlemesi çok başarılı.",
+                cons: "Başlangıç paket fiyatı yeni kurulan küçük işletmeler için yüksek gelebilir.",
+                modules: ["Pazaryeri Entegrasyonları", "Hızlı Ödeme Sayfası", "E-posta Pazarlama", "Çoklu Dil Desteği"],
+                url: "https://ikas.com"
+            },
+            {
+                id: "kolayik",
+                name: "Kolay İK",
+                category: "İnsan Kaynakları",
+                description: "Çalışan izinleri, masrafları, zimmet ve bordro süreçlerini tek bir platformdan yönetmenizi sağlayan İK yazılımı.",
+                rating: 4.6,
+                tags: ["Mobil", "Bulut", "Ücretsiz Plan"],
+                priceMin: 120,
+                priceAvg: 180,
+                priceMax: 290,
+                pros: "Şık ve sade arayüz. İzin talepleri ve masraf onay süreçleri mobilde çok rahat yönetiliyor.",
+                cons: "Muhasebe yazılımı olmadığı için doğrudan e-Fatura kesemezsiniz.",
+                modules: ["İzin Yönetimi", "Masraf Takibi", "Performans Değerlendirme", "Bordro Hazırlama"],
+                url: "https://kolayik.com"
+            },
+            {
+                id: "teamgram",
+                name: "TeamGram",
+                category: "CRM & Müşteri Takibi",
+                description: "Satış ekibinizin müşteri görüşmelerini, tekliflerini ve satış süreçlerini kolayca takip etmesini sağlayan CRM.",
+                rating: 4.5,
+                tags: ["Mobil", "Bulut", "Ücretsiz Plan"],
+                priceMin: 180,
+                priceAvg: 240,
+                priceMax: 400,
+                pros: "Türkçe destek ekibi çok hızlı yardımcı oluyor. Teklif hazırlama şablonları estetik.",
+                cons: "Devasa kurumsal ERP entegrasyonları ek özelleştirme gerektirir.",
+                modules: ["Müşteri Yönetimi", "Satış Fırsatları", "Teklif Hazırlama", "Görev Atama"],
+                url: "https://www.teamgram.com"
+            },
+            {
+                id: "logoisbasi",
+                name: "Logo İşbaşı",
+                category: "Ön Muhasebe & Finans",
+                description: "Özellikle serbest meslek sahipleri ve küçük esnaflar için cep telefonundan kolayca e-Fatura kesme imkanı sunan yazılım.",
+                rating: 4.4,
+                tags: ["Mobil", "e-Fatura", "Bulut"],
+                priceMin: 99,
+                priceAvg: 140,
+                priceMax: 220,
+                pros: "Mobilde çok pratik. Saniyeler içinde e-Fatura kesip WhatsApp ile gönderebilirsiniz.",
+                cons: "Stok ve depo detayları sınırlıdır.",
+                modules: ["e-Fatura & e-SMM", "Mobil Fatura", "Cari Takip"],
+                url: "https://isbasi.com"
+            },
+            {
+                id: "iyzico",
+                name: "iyzico",
+                category: "Ödeme Sistemleri",
+                description: "E-ticaret siteleri ve web uygulamaları için güvenli ve kolay sanal POS ödeme altyapısı çözümü.",
+                rating: 4.9,
+                tags: ["Popüler", "Bulut"],
+                priceMin: 0,
+                priceAvg: 50,
+                priceMax: 100,
+                pros: "Kurulumu ve entegrasyonu son derece kolay. Sahtekarlık (Fraud) koruması yüksek.",
+                cons: "İşlem başına aldığı komisyon oranları dönemsel olarak değişebilir.",
+                modules: ["Sanal POS", "Link ile Ödeme", "Pazaryeri Ödeme Altyapısı"],
+                url: "https://www.iyzico.com"
+            },
+            {
+                id: "zohocrm",
+                name: "Zoho CRM",
+                category: "CRM & Müşteri Takibi",
+                description: "Dünya genelinde milyonlarca işletme tarafından kullanılan gelişmiş otomasyon ve satış takip platformu.",
+                rating: 4.3,
+                tags: ["Bulut", "Ücretsiz Plan"],
+                priceMin: 150,
+                priceAvg: 300,
+                priceMax: 600,
+                pros: "Çok zengin yapay zeka ve otomasyon özellikleri var. Raporlama paneli muazzam.",
+                cons: "Arayüzde bazen çok fazla detay olduğu için öğrenme süresi uzayabilir.",
+                modules: ["Yapay Zeka Asistanı", "E-posta Pazarlama", "Satış Otomasyonu"],
+                url: "https://www.zoho.com/crm"
+            },
+            {
+                id: "bulutfilo",
+                name: "Bulut Filo",
+                category: "Saha & Filo Yönetimi",
+                description: "Şirket araçlarınızın bakım, yakıt, ceza ve kasko takiplerini dijitalleştiren filo yönetim yazılımı.",
+                rating: 4.2,
+                tags: ["Bulut"],
+                priceMin: 200,
+                priceAvg: 350,
+                priceMax: 500,
+                pros: "Araç başına düşen maliyetleri net görmenizi sağlar. Muayene zamanlarını hatırlatır.",
+                cons: "Sadece 1-2 aracı olan mikro işletmeler için fazla detaylı gelebilir.",
+                modules: ["Yakıt Takibi", "Bakım Hatırlatıcı", "Sürücü Performansı"],
+                url: "https://www.bulutfilo.com"
+            },
+            {
+                id: "trello",
+                name: "Trello",
+                category: "Proje Yönetimi",
+                description: "Ekibinizin iş süreçlerini Kanban panoları ve kartlar aracılığıyla görsel olarak takip etmesini sağlayan araç.",
+                rating: 4.8,
+                tags: ["Popüler", "Mobil", "Ücretsiz Plan", "Bulut"],
+                priceMin: 0,
+                priceAvg: 60,
+                priceMax: 150,
+                pros: "Sürükle-bırak yapısı sayesinde 5 dakikada öğrenip kullanmaya başlayabilirsiniz.",
+                cons: "Çok karmaşık ve çok aşamalı büyük projelerde yetersiz kalabilir.",
+                modules: ["Kanban Panoları", "Sürükle-Bırak İş Kartları", "Otomasyon (Butler)"],
+                url: "https://trello.com"
+            },
+            {
+                id: "canva",
+                name: "Canva",
+                category: "Grafik & Tasarım",
+                description: "Tasarım bilgisi olmayan işletmelerin sosyal medya görselleri, sunum ve afişler hazırlamasını sağlayan platform.",
+                rating: 4.9,
+                tags: ["Popüler", "Mobil", "Ücretsiz Plan", "Bulut"],
+                priceMin: 0,
+                priceAvg: 100,
+                priceMax: 200,
+                pros: "Binlerce hazır şablon ve yapay zeka görsel üretici içerir.",
+                cons: "Profesyonel vektörel çizimler (Adobe Illustrator gibi) yapılamaz.",
+                modules: ["Afiş & Sunum Hazırlama", "Arka Plan Silme", "Marka Kitleri"],
+                url: "https://www.canva.com"
+            }
+        ];
+
+        // DOM Elemanları
+        const softwareListEl = document.getElementById('softwareList');
+        const noResultsEl = document.getElementById('noResults');
+        const searchInput = document.getElementById('searchInput');
+        const sortSelect = document.getElementById('sortSelect');
+        const categorySelect = document.getElementById('categorySelect');
+        const featureCheckboxes = document.querySelectorAll('.feature-checkbox');
+        const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+
+        // Modal Elemanları
+        const detailModal = document.getElementById('detailModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalCloseSecondary = document.getElementById('modalCloseSecondary');
+
+        // Dark Mode Elemanları
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+
+        // 1. Kategorileri Dinamik Yükleme
+        function loadCategories() {
+            const categories = [...new Set(softwareData.map(item => item.category))];
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        // 2. Kartları Ekrana Basma
+        function renderCards(data) {
+            softwareListEl.innerHTML = '';
+            
+            if (data.length === 0) {
+                noResultsEl.classList.remove('hidden');
+                return;
+            } else {
+                noResultsEl.classList.add('hidden');
+            }
+
+            data.forEach(item => {
+                const tagsHTML = item.tags.map(tag => `
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300">
+                        ${tag}
+                    </span>
+                `).join('');
+
+                const cardHTML = `
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-start justify-between gap-3 mb-3">
+                                <div>
+                                    <h3 class="font-bold text-lg text-slate-900 dark:text-white">${item.name}</h3>
+                                    <span class="text-xs text-slate-400 font-medium">${item.category}</span>
+                                </div>
+                                <div class="flex items-center gap-1 text-amber-500 font-bold text-sm bg-amber-50 dark:bg-amber-950/30 px-2 py-1 rounded-lg">
+                                    <i class="fa-solid fa-star text-xs"></i>
+                                    <span>${item.rating}</span>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap gap-1.5 mb-3">
+                                ${tagsHTML}
+                            </div>
+
+                            <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 mb-4 leading-relaxed">
+                                ${item.description}
+                            </p>
+                        </div>
+
+                        <div>
+                            <div class="pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs mb-4">
+                                <span class="text-slate-400">Tahmini Fiyat:</span>
+                                <span class="font-bold text-slate-800 dark:text-slate-200">
+                                    ${item.priceMin === 0 ? 'Ücretsiz Plan Var' : `₺${item.priceMin} - ₺${item.priceMax} /ay`}
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="openModal('${item.id}')" class="w-full py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold rounded-xl text-xs transition">
+                                    Detay Gör
+                                </button>
+                                <a href="${item.url}" target="_blank" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs text-center transition">
+                                    Siteye Git
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                softwareListEl.innerHTML += cardHTML;
+            });
+        }
+
+        // 3. Filtreleme ve Sıralama Mantığı
+        function filterAndSortData() {
+            const searchVal = searchInput.value.toLowerCase();
+            const selectedCat = categorySelect.value;
+            const sortVal = sortSelect.value;
+            const selectedFeatures = Array.from(featureCheckboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            let filtered = softwareData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchVal) || 
+                                      item.description.toLowerCase().includes(searchVal) ||
+                                      item.category.toLowerCase().includes(searchVal);
+
+                const matchesCategory = selectedCat === 'all' || item.category === selectedCat;
+
+                const matchesFeatures = selectedFeatures.every(feat => item.tags.includes(feat));
+
+                return matchesSearch && matchesCategory && matchesFeatures;
+            });
+
+            // Sıralama
+            if (sortVal === 'rating') {
+                filtered.sort((a, b) => b.rating - a.rating);
+            } else if (sortVal === 'price-asc') {
+                filtered.sort((a, b) => a.priceMin - b.priceMin);
+            } else if (sortVal === 'price-desc') {
+                filtered.sort((a, b) => b.priceMax - a.priceMax);
+            }
+
+            renderCards(filtered);
+        }
+
+        // 4. Modal Açma ve İçerik Doldurma
+        function openModal(id) {
+            const item = softwareData.find(s => s.id === id);
+            if (!item) return;
+
+            document.getElementById('modalLogo').textContent = item.name.substring(0, 2).toUpperCase();
+            document.getElementById('modalName').textContent = item.name;
+            document.getElementById('modalCategory').textContent = item.category;
+            document.getElementById('modalDescription').textContent = item.description;
+
+            document.getElementById('modalMinPrice').textContent = item.priceMin === 0 ? 'Ücretsiz' : `₺${item.priceMin}`;
+            document.getElementById('modalAvgPrice').textContent = `₺${item.priceAvg}`;
+            document.getElementById('modalMaxPrice').textContent = `₺${item.priceMax}`;
+
+            document.getElementById('modalPros').textContent = item.pros;
+            document.getElementById('modalCons').textContent = item.cons;
+
+            const modulesContainer = document.getElementById('modalModules');
+            modulesContainer.innerHTML = item.modules.map(m => `
+                <span class="px-2.5 py-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-medium">
+                    ${m}
+                </span>
+            `).join('');
+
+            document.getElementById('modalBuyBtn').href = item.url;
+
+            detailModal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            detailModal.classList.add('hidden');
+        }
+
+        // 5. Dark Mode Yönetimi
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                themeIcon.className = "fa-solid fa-moon";
+                themeText.textContent = "Koyu Tema";
+            } else {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = "fa-solid fa-sun text-amber-400";
+                themeText.textContent = "Açık Tema";
+            }
+        }
+
+        // Event Listener'lar
+        searchInput.addEventListener('input', filterAndSortData);
+        sortSelect.addEventListener('change', filterAndSortData);
+        categorySelect.addEventListener('change', filterAndSortData);
+        featureCheckboxes.forEach(cb => cb.addEventListener('change', filterAndSortData));
+        
+        resetFiltersBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            sortSelect.value = 'default';
+            categorySelect.value = 'all';
+            featureCheckboxes.forEach(cb => cb.checked = false);
+            filterAndSortData();
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modalCloseSecondary.addEventListener('click', closeModal);
+        detailModal.addEventListener('click', (e) => {
+            if (e.target === detailModal) closeModal();
+        });
+
+        themeToggleBtn.addEventListener('click', toggleDarkMode);
+
+        // Uygulamayı Başlat
+        loadCategories();
+        renderCards(softwareData);
+    </script>
 </body>
 </html>
